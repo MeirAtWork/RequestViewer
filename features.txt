@@ -1,0 +1,12 @@
+line highlight
+line number
+match braces
+search
+collapsible anchors
+auto linker meaning if the text is a link - its clickable
+copy to clipboard button
+auto ident
+--
+colored stack
+copy to clipboard button
+scrollable

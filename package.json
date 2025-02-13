@@ -1,0 +1,22 @@
+{
+  "name": "globale-text-viewer",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "devDependencies": {
+    "vite": "6.0.5"
+  },
+  "dependencies": {
+    "@codemirror/lang-javascript": "6.2.2",
+    "@codemirror/state": "6.5.1",
+    "@codemirror/view": "6.36.2",
+    "codemirror": "6.0.1",
+    "netstack.js": "2.1.1",
+    "prettier": "3.4.2"
+  }
+}

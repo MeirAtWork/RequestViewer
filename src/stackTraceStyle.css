@@ -1,0 +1,9 @@
+#stackTraceViewer {background-color:#ffffff; color: #000000;}
+.st-frame {color:#358cc5;}
+.st-type {color: #6B2FBA;}
+.st-method {color: #00855F;}
+.st-frame-params {color: #383838; font-weight: normal;}
+.st-param-type {color: #6B2FBA;}
+.st-param-name {color: #383838;}
+.st-file {color:#0F54D6; letter-spacing: 1px; padding-right: 2px;}
+.st-line {color:#ff4f68; letter-spacing: 1px; padding-left: 2px;}
