@@ -91,7 +91,7 @@ out
 .nuxt
 dist
 dist-ssr
-local
+*.local
 
 # Editor directories and files
 .vscode/*
