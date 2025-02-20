@@ -8,6 +8,7 @@ import * as parserBabel from "prettier/parser-babel";
 import * as prettierPluginEstree from "prettier/plugins/estree";
 import {setupLinkDecorator} from './linkDecorator.js'
 import {setupCopyToClipboardPlugin} from './copyButtonPlugin.js'
+import './jsonViewer.css'
 
 
 export function setupJsonViewer(element, text) {
