@@ -11,7 +11,7 @@ import {setupCopyToClipboardPlugin} from './copyButtonPlugin.js'
 import './jsonViewer.css'
 
 
-export function setupJsonViewer(element, text) {
+export function setupJsonViewer(element, height, text) {
   const customSearchConfig = search({
     top: true // Moves the search panel to the top
   });
@@ -25,6 +25,12 @@ export function setupJsonViewer(element, text) {
       setupCopyToClipboardPlugin(),
       EditorState.readOnly.of(true), // state  level readonly
       EditorView.editable.of(true), // but stil focusable in DOM level (this is the default but left here for clarity)
+      EditorView.theme({
+        "&": {                    // this selects .cm-editor
+          height: height + "px",  // set the height
+          overflow: "auto",       // add scrollbars when content exceeds the height
+        },
+      }),
       javascript()],
   })
 
