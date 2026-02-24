@@ -6,6 +6,7 @@ collapsible anchors
 auto linker meaning if the text is a link - its clickable
 copy to clipboard button
 auto ident
+read only
 --
 colored stack
 copy to clipboard button
