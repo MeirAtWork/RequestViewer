@@ -1,17 +1,24 @@
 import './style.css'
 import { setupJsonViewer } from './jsonViewer.js'
 import { setupStackTraceViewer } from './stackTraceViewer.js'
+import { setupMonacoJsonViewer } from './monacoJsonViewer.js'
 
 document.querySelector('#app').innerHTML = `
   <div>
     <h1>Welcome to GlobalE text viewer playground!</h1>
 
+    <h2>CodeMirror JSON Viewer</h2>
     <div id="jsonViewer"></div>
+
+    <h2>Monaco JSON Viewer</h2>
+    <div id="monacoJsonViewer"></div>
+
+    <h2>Stack Trace Viewer</h2>
     <div id="stackTraceViewer"></div>
   </div>
 `
 
-setupJsonViewer(document.querySelector('#jsonViewer'), 300, `{
+const jsonText = `{
   "CountryCode":"ID",
 
   "ClientIP":"109.226.21.168",
@@ -136,8 +143,12 @@ setupJsonViewer(document.querySelector('#jsonViewer'), 300, `{
   "WebStoreInstanceCode":null,
   "IsMoto":0,
   "LoyaltyPoints":null
-}
-`)
+}`;
+
+setupJsonViewer(document.querySelector('#jsonViewer'), 300, jsonText)
+
+setupMonacoJsonViewer(document.querySelector('#monacoJsonViewer'), 300, jsonText)
+
 
 //use raw string in order to avoid JS removing the '\' characters
 let log = String.raw`System.FormatException: Input string was not in a correct format.   at GlobalE.BL.Orders.CreateOrderQueueMessageProxy.CreateOrderBasedOnQueueMessage(AppSettingsBLProxy settings, IMerchantsBL merchants, CreateOrderQueueMessage message, IGELogger logger) in D:\jenkins\workspace\CORE_DanielTest\a4b75ddb5bc00e6051022ca6cbaf5173\BL\Orders\CreateOrderQueueMessageProxy.cs:line 54
