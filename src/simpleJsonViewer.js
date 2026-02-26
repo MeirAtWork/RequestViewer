@@ -70,10 +70,20 @@ class SimpleJsonViewer {
         this.searchPanel.className = 'json-viewer-search-panel hidden';
         this.searchPanel.innerHTML = `
             <input type="text" class="json-search-input" placeholder="Search...">
-            <button class="json-search-btn prev" title="Previous match">▲</button>
-            <button class="json-search-btn next" title="Next match">▼</button>
+            <button class="json-search-btn prev" title="Previous match">
+                <svg width="16" height="16" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" fill="currentColor">
+                    <path fill-rule="evenodd" clip-rule="evenodd" d="M8.00004 5.58579L4.70715 8.87868L3.29294 7.46447L8.00004 2.75736L12.7071 7.46447L11.2929 8.87868L8.00004 5.58579Z" transform="translate(0, 2)"/>
+                </svg>
+            </button>
+            <button class="json-search-btn next" title="Next match">
+                <svg width="16" height="16" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" fill="currentColor">
+                    <path fill-rule="evenodd" clip-rule="evenodd" d="M8.00004 10.4142L11.2929 7.12132L12.7071 8.53553L8.00004 13.2426L3.29294 8.53553L4.70715 7.12132L8.00004 10.4142Z" transform="translate(0, -2)"/>
+                </svg>
+            </button>
             <span class="search-count" style="margin-left:5px; font-size: 11px; color:#666; min-width: 60px;"></span>
-            <button class="json-search-btn close" title="Close">×</button>
+            <button class="json-search-btn close" title="Close">
+                <svg width="15" height="15" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" fill="currentColor"><path fill-rule="evenodd" clip-rule="evenodd" d="M8 8.70711L11.6464 12.3536L12.3536 11.6464L8.70711 8L12.3536 4.35355L11.6464 3.64645L8 7.29289L4.35355 3.64645L3.64645 4.35355L7.29289 8L3.64645 11.6464L4.35355 12.3536L8 8.70711Z"/></svg>
+            </button>
         `;
         this.container.appendChild(this.searchPanel);
 
@@ -177,8 +187,10 @@ class SimpleJsonViewer {
             
             if (line.collapsible) {
                  const expander = document.createElement('span');
-                 expander.className = 'json-expander';
-                 expander.textContent = '-'; 
+                 expander.className = 'json-expander expanded'; // Default expanded
+                 // Use SVG for Monaco-like chevron (chevron-down)
+                 expander.innerHTML = `<svg viewBox="0 0 16 16" width="14" height="14" fill="currentColor"><path d="M7.976 10.072l4.357-4.357.62.618L8.284 11h-.618L3 6.333l.619-.618 4.357 4.357z"/></svg>`;
+                 
                  expander.addEventListener('click', (e) => {
                      e.stopPropagation();
                      this.toggleCollapse(index);
@@ -335,8 +347,10 @@ class SimpleJsonViewer {
         if (isCollapsed) {
             // EXPAND
             line.domElement.classList.remove('collapsed');
-            if (line.expanderElement) line.expanderElement.textContent = '-';
-            
+            if (line.expanderElement) {
+                line.expanderElement.classList.add('expanded');
+                line.expanderElement.classList.remove('collapsed');
+            }
             // Unhide children logic
             for (let i = index + 1; i <= endIndex; i++) {
                 const childLine = this.lines[i];
@@ -353,8 +367,10 @@ class SimpleJsonViewer {
         } else {
             // COLLAPSE
             line.domElement.classList.add('collapsed');
-            if (line.expanderElement) line.expanderElement.textContent = '+';
-            
+            if (line.expanderElement) {
+                line.expanderElement.classList.add('collapsed');
+                line.expanderElement.classList.remove('expanded');
+            }
             // Hide everything in between
             for (let i = index + 1; i <= endIndex; i++) {
                 this.lines[i].domElement.classList.add('hidden');

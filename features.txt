@@ -13,3 +13,20 @@ read only
 colored stack
 copy to clipboard button
 scrollable
+
+---
+
+left:
+ subtle match bracket background
+ collapse mode should still show the end bracket
+ collapse mode should show the ... and highlight the line as monaco does
+
+bug:
+ search up \ down buttons should be disabled until search term in inserted
+ anchor make the numbers crazy - see at the buttom - they are cut of the bottom
+ anchor push numbers aside thenit comes to above 100 lines
+ second ctrl+f goes to the entire page instead of the viewer
+
+tech dept:
+ css file has errors - info not inside css classes
+ export the class using one method instead of using the 'window'

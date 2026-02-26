@@ -45,16 +45,24 @@
 
 /* Expander in gutter */
 .json-expander {
-    display: inline-block;
-    width: 10px;
-    height: 10px;
-    line-height: 8px; /* centering '-' vertically */
-    text-align: center;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    width: 16px;
+    height: 16px;
     cursor: pointer;
     user-select: none;
     background: transparent;
-    font-size: 10px;
     color: #999;
+}
+
+.json-expander svg {
+    display: block;
+    transition: transform 0.1s ease;
+}
+
+.json-expander.collapsed svg {
+    transform: rotate(-90deg);
 }
 
 .json-expander:hover {
@@ -109,24 +117,7 @@
     cursor: pointer;
 }
 
-.json-expander {
-    display: inline-block;
-    width: 12px;
-    height: 12px;
-    line-height: 12px;
-    text-align: center;
-    cursor: pointer;
-    margin-right: 4px;
-    user-select: none;
-    border: 1px solid #ccc;
-    background: #eee;
-    font-size: 10px;
-    vertical-align: middle;
-}
-
-.json-expander:hover {
-    background: #ddd;
-}
+/* Old .json-expander definition removed to fix duplicate and unwanted styling */
 
 .hidden {
     display: none;
@@ -150,10 +141,7 @@
     z-index: 100;
     display: flex;
     align-items: center;
-    gap: 5px;
-    /* Reset any flex child stretching from previous structure */
-    height: auto; 
-    align-self: flex-end; /* If it were flex item */
+    gap: 2px;
 }
 
 /* Ensure hidden overrides flex */
@@ -168,10 +156,25 @@
 }
 
 .json-search-btn {
-    padding: 2px 6px;
+    padding: 3px; /* Slightly tighter padding */
     cursor: pointer;
-    background: #eee;
-    border: 1px solid #ccc;
+    background: transparent;
+    border: none; /* No border by default */
+    display: inline-flex; /* Use flex to center SVG */
+    align-items: center;
+    justify-content: center;
+    border-radius: 3px;
+    color: #424242;
+    min-width: 22px; /* Ensure square like */
+    height: 22px;
+}
+
+.json-search-btn:hover {
+    background-color: #e8e8e8;
+}
+
+.json-search-btn svg {
+    display: block;
 }
 
 .json-search-match {
