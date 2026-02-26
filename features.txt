@@ -1,11 +1,13 @@
-line highlight
+clicking on a line - line highlighted
+hovering on a line - the bachground is highlighted
 line number
 match braces
 search
 collapsible anchors
 auto linker meaning if the text is a link - its clickable
 copy to clipboard button
-auto ident
+auto format and indent (= if the string is a single raw json - it displays it in several lines)
+semi transparent vertical lines that make the user understand the start and the end of each node
 read only
 --
 colored stack

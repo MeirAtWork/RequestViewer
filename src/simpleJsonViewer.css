@@ -1,0 +1,190 @@
+.json-viewer-container {
+    display: flex; /* Kept for structure, but overridden by inline style if needed */
+    font-family: Consolas, monospace;
+    font-size: 13px;
+    line-height: 1.5;
+    background: #fff;
+    color: #333;
+    border: 1px solid #ddd;
+    position: relative;
+    /* overflow: auto;  REMOVED - scrolling is now handled by inner wrapper */
+    height: 100%;
+}
+
+.json-viewer-gutter {
+    background: #fff;
+    /* border-right: 1px solid #ddd; Removed border as requested */
+    text-align: right;
+    padding: 0 5px;
+    user-select: none;
+    min-width: 40px; /* Increased for expander */
+    color: #999;
+    position: sticky;
+    left: 0;
+    z-index: 10;
+    /* Ensure gutter stretches */
+    min-height: 100%;
+}
+
+.json-line-number {
+    display: flex;
+    justify-content: flex-end; /* Numbers align right */
+    align-items: center;
+    height: 1.5em; /* Match line height */
+    padding-right: 2px;
+}
+
+.json-expander-placeholder {
+    width: 14px;
+    height: 14px;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    margin-left: 8px; /* Increased gap between number and expander */
+}
+
+/* Expander in gutter */
+.json-expander {
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    line-height: 8px; /* centering '-' vertically */
+    text-align: center;
+    cursor: pointer;
+    user-select: none;
+    background: transparent;
+    font-size: 10px;
+    color: #999;
+}
+
+.json-expander:hover {
+    color: #333;
+    font-weight: bold;
+}
+    flex: 1;
+    padding-left: 10px;
+    position: relative;
+    white-space: pre;
+    /* overflow-x: auto; Remove this to prevent double scrollbars */
+    min-width: 0; /* Helps with flex child text overflow */
+}
+
+.json-line {
+    display: block;
+    min-height: 1.5em; /* Ensure empty lines have height */
+}
+
+.json-line.highlight {
+    background-color: #fffbdd;
+}
+
+.json-line:hover {
+    background-color: #e6f7ff;
+}
+
+.json-key {
+    color: #a11;
+    font-weight: bold;
+}
+
+.json-string {
+    color: #28a745;
+}
+
+.json-number {
+    color: #d73a49;
+}
+
+.json-boolean {
+    color: #005cc5;
+}
+
+.json-null {
+    color: #6f42c1;
+}
+
+.json-link {
+    color: #0366d6;
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+.json-expander {
+    display: inline-block;
+    width: 12px;
+    height: 12px;
+    line-height: 12px;
+    text-align: center;
+    cursor: pointer;
+    margin-right: 4px;
+    user-select: none;
+    border: 1px solid #ccc;
+    background: #eee;
+    font-size: 10px;
+    vertical-align: middle;
+}
+
+.json-expander:hover {
+    background: #ddd;
+}
+
+.hidden {
+    display: none;
+}
+
+.collapsed-indicator {
+    color: #999;
+    font-style: italic;
+    cursor: pointer;
+}
+
+/* Search Panel */
+.json-viewer-search-panel {
+    position: absolute;
+    top: 10px;
+    right: 20px;
+    background: white;
+    padding: 5px;
+    border: 1px solid #ccc;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    /* Reset any flex child stretching from previous structure */
+    height: auto; 
+    align-self: flex-end; /* If it were flex item */
+}
+
+/* Ensure hidden overrides flex */
+.json-viewer-search-panel.hidden {
+    display: none !important;
+}
+
+.json-search-input {
+    padding: 4px;
+    border: 1px solid #ccc;
+    width: 150px;
+}
+
+.json-search-btn {
+    padding: 2px 6px;
+    cursor: pointer;
+    background: #eee;
+    border: 1px solid #ccc;
+}
+
+.json-search-match {
+    background-color: yellow;
+}
+
+.json-search-match.active {
+    background-color: orange;
+}
+
+.brace-match .json-bracket {
+    background-color: #d1d1d1;
+    outline: 1px solid #999;
+    color: black;
+    font-weight: bold;
+}

@@ -2,10 +2,21 @@ import './style.css'
 import { setupJsonViewer } from './jsonViewer.js'
 import { setupStackTraceViewer } from './stackTraceViewer.js'
 import { setupMonacoJsonViewer } from './monacoJsonViewer.js'
+import './simpleJsonViewer.js'
+// Import CSS for Vite (bundler) usage
+import './simpleJsonViewer.css'
+
+// Trick SimpleJsonViewer into thinking CSS is loaded so it doesn't try to fetch 404
+const styleMarker = document.createElement('meta');
+styleMarker.id = 'simple-json-viewer-style';
+document.head.appendChild(styleMarker);
 
 document.querySelector('#app').innerHTML = `
   <div>
     <h1>Welcome to GlobalE text viewer playground!</h1>
+
+    <h2>Simple JSON Viewer</h2>
+    <div id="simpleJsonViewer" style="height: 300px;"></div>
 
     <h2>CodeMirror JSON Viewer</h2>
     <div id="jsonViewer"></div>
@@ -146,6 +157,9 @@ const jsonText = `{
 }`;
 
 setupJsonViewer(document.querySelector('#jsonViewer'), 300, jsonText)
+
+// Setup Simple JSON Viewer
+window.createJsonViewer(document.querySelector('#simpleJsonViewer'), jsonText);
 
 setupMonacoJsonViewer(document.querySelector('#monacoJsonViewer'), 300, jsonText)
 
