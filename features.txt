@@ -16,14 +16,6 @@ scrollable
 
 ---
 
-left:
- collapse mode should:
-  still show the end bracket and
-  the ... and
-  make the ... clickable and
-  change mouse pointer on that ... and
-  highlight the line as monaco does
-
 bug:
  search up \ down buttons should be disabled until search term in inserted
  anchor make the numbers crazy - see at the buttom - they are cut of the bottom

@@ -185,6 +185,38 @@
     background-color: orange;
 }
 
+/* Collapsible placeholder */
+.json-placeholder {
+    display: none;
+    color: #666;
+    margin-left: 1px;
+}
+
+.json-line.collapsed .json-placeholder {
+    display: inline;
+}
+
+.json-ellipsis {
+    cursor: pointer;
+    background: #e8eaed;
+    color: #5f6368;
+    padding: 0 4px;
+    border-radius: 4px;
+    user-select: none;
+    margin-right: 1px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    height: 16px;
+    line-height: normal;
+    font-size: 14px; /* Ensure consistent size */
+}
+
+.json-ellipsis:hover {
+    background: #dcdcdc;
+    color: #202124;
+}
+
 .brace-match .json-bracket {
     background-color: #bbdefb;
     outline: 1px solid #64b5f6;

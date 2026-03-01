@@ -147,6 +147,15 @@ class SimpleJsonViewer {
             // Indentation
             lineEl.style.paddingLeft = ((line.depth * 20) + 5) + 'px'; // +5 padding for text
             
+            // Allow ellipsis click to expand
+            const ellipsis = lineEl.querySelector('.json-ellipsis');
+            if (ellipsis) {
+                ellipsis.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    this.toggleCollapse(index);
+                });
+            }
+
             if (line.depth > 0) {
                  const bgSize = line.depth * 20;
                  // Gradient: line at 5px (match text padding of 5px).
@@ -251,8 +260,25 @@ class SimpleJsonViewer {
                 // "key": { 
                 let openHtml = `${prefix}<span class="json-punctuation json-bracket">${openChar}</span>`;
                 
+                // Placeholder visible only when collapsed
+                // Should show: ... } (optionally comma)
+                // The "..." part should be clickable to expand
+                let suffix = (!isLast) ? '<span class="json-punctuation">,</span>' : '';
+                // We wrap the ellipsis in a span that handles the click.
+                // The closeChar and suffix are just text/punctuation.
+                
+                // Note: The click handler for expanding is likely on the whole line or the gutter expander.
+                // If user wants specifically the "..." to be clickable and change cursor, we need a specific class.
+                // We add an id or class to identifying the ellipsis for event binding? 
+                // Actually we can delegate click in initEvents or just bind inside render loop. 
+                // But render loop builds string HTML.
+                // So binding happens after `innerHTML = line.html`.
+                
+                openHtml += `<span class="json-placeholder"><span class="json-ellipsis">\u22EF</span><span class="json-punctuation json-bracket">${closeChar}</span>${suffix}</span>`;
+                
                 const openLineIndex = this.lines.length;
                 this.addLine(depth, openHtml, true, 'open');
+
 
                 // Children
                 const keys = Object.keys(value);
@@ -371,7 +397,8 @@ class SimpleJsonViewer {
                 line.expanderElement.classList.add('collapsed');
                 line.expanderElement.classList.remove('expanded');
             }
-            // Hide everything in between
+            // Hide everything in between including closing bracket line
+            // The placeholder on the current line shows the closing bracket instead
             for (let i = index + 1; i <= endIndex; i++) {
                 this.lines[i].domElement.classList.add('hidden');
                 this.lines[i].gutterElement.classList.add('hidden');
