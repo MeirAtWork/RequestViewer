@@ -83,11 +83,11 @@
 }
 
 .json-line.highlight {
-    background-color: #fffbdd;
+    background-color: #e3f2fd;
 }
 
 .json-line:hover {
-    background-color: #e6f7ff;
+    background-color: #f1f8ff;
 }
 
 .json-key {
@@ -186,8 +186,8 @@
 }
 
 .brace-match .json-bracket {
-    background-color: #d1d1d1;
-    outline: 1px solid #999;
+    background-color: #bbdefb;
+    outline: 1px solid #64b5f6;
     color: black;
     font-weight: bold;
 }

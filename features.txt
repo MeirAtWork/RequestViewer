@@ -17,7 +17,6 @@ scrollable
 ---
 
 left:
- subtle match bracket background
  collapse mode should:
   still show the end bracket and
   the ... and
