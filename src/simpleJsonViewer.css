@@ -53,7 +53,15 @@
 /* New Layout: Single list of Flex Rows */
 .json-line-row {
     display: flex;
-    width: 100%; /* Full width */
+    min-width: 100%; /* Stretch to at least container width */
+    width: fit-content; /* Allow growing beyond container if content is wide */
+}
+
+/* Ensure wrapped mode respects container width */
+.json-viewer-container.wrapped .json-line-row {
+    width: 100%; /* Constrain to container */
+    min-width: 0;
+    box-sizing: border-box; /* Good practice */
 }
 
 /* Highlight happens on the row now */

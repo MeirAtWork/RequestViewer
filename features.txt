@@ -18,7 +18,6 @@ scrollable
 ---
 
 wrap mode bugs:
- selected line when non wrapped text mode blue background is not untill the end of the scroll
  search up down scroll back horizontally not to exact position
 
 search panel should be prettier
