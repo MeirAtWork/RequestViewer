@@ -10,6 +10,7 @@ class SimpleJsonViewer {
         this.lines = []; // Stores { el, lineNo, depth, type, ... }
         this.searchMatches = [];
         this.currentMatchIndex = -1;
+        this.isWrapped = true; // Default state: Wrapped
         
         // CSS Setup
         // Check if style is already loaded (by ID or if we are in a dev environment that injected it)
@@ -46,12 +47,10 @@ class SimpleJsonViewer {
 
     initDOM() {
         this.container.classList.add('json-viewer-container');
+        if (this.isWrapped) {
+            this.container.classList.add('wrapped');
+        }
         this.container.innerHTML = '';
-        
-        // --- Restructure for Fixed Search Panel ---
-        // We create an INNER container that scrolls.
-        // The OUTER container (this.container) will be relative and hide overflow.
-        // The Search Panel will be absolute inside OUTER.
         
         // Apply inline styles
         this.container.style.position = 'relative';
@@ -64,6 +63,31 @@ class SimpleJsonViewer {
             this.container.setAttribute('tabindex', '0');
         }
         this.container.style.outline = 'none'; // distinct focus style if desired, or none
+
+        // Toolbar (Wrap Toggle)
+        const toolbar = document.createElement('div');
+        toolbar.className = 'json-viewer-toolbar';
+        toolbar.innerHTML = `
+            <button class="json-wrap-toggle ${this.isWrapped ? 'active' : ''}" title="Toggle Word Wrap">
+                <!-- Text Wrap Icon -->
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
+                    <path fill-rule="evenodd" d="M2.5 3.5a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5zm0 9a.5.5 0 0 1 .5-.5h6a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5zm0-4.5a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5z"/>
+                </svg>
+            </button>
+        `;
+        this.container.appendChild(toolbar);
+
+        const wrapBtn = toolbar.querySelector('.json-wrap-toggle');
+        wrapBtn.addEventListener('click', () => {
+             this.isWrapped = !this.isWrapped;
+             if (this.isWrapped) {
+                 this.container.classList.add('wrapped');
+                 wrapBtn.classList.add('active');
+             } else {
+                 this.container.classList.remove('wrapped');
+                 wrapBtn.classList.remove('active');
+             }
+        });
 
         // Search Panel (Appended to OUTER)
         this.searchPanel = document.createElement('div');
@@ -88,23 +112,13 @@ class SimpleJsonViewer {
         this.container.appendChild(this.searchPanel);
 
         // Scroll Wrapper (The actual scrollable area)
-        const scrollWrapper = document.createElement('div');
-        scrollWrapper.className = 'json-viewer-scroll-view';
-        scrollWrapper.style.flex = '1';
-        scrollWrapper.style.display = 'flex';
-        scrollWrapper.style.overflow = 'auto'; 
-        scrollWrapper.style.minHeight = '0'; // Crucial for flex child scrolling
-        scrollWrapper.style.width = '100%';
-        this.container.appendChild(scrollWrapper);
+        this.scrollWrapper = document.createElement('div');
+        this.scrollWrapper.className = 'json-viewer-scroll-view';
+        // Note: Styles for scroll-view are in CSS now (flex col)
+        this.container.appendChild(this.scrollWrapper);
 
-        // Gutter & Content go inside Wrapper
-        this.gutter = document.createElement('div');
-        this.gutter.className = 'json-viewer-gutter';
-        scrollWrapper.appendChild(this.gutter);
-
-        this.content = document.createElement('div');
-        this.content.className = 'json-viewer-content';
-        scrollWrapper.appendChild(this.content);
+        // List Container (Replacing gutter/content split)
+        // We just append rows directly to scrollWrapper
         
         const input = this.searchPanel.querySelector('input');
         const btnPrev = this.searchPanel.querySelector('.prev');
@@ -126,11 +140,15 @@ class SimpleJsonViewer {
         
         // Ensure hidden by default (fix specificity issues)
         this.searchPanel.style.display = 'none';
+        
+        // Expose helper to clear lines
+        this.clearContent = () => {
+             this.scrollWrapper.innerHTML = '';
+        };
     }
 
     render() {
-        this.content.innerHTML = '';
-        this.gutter.innerHTML = '';
+        this.clearContent();
         this.lines = [];
         this.bracketStack = [];
         
@@ -139,16 +157,52 @@ class SimpleJsonViewer {
 
         // Render lines to DOM
         this.lines.forEach((line, index) => {
-            const lineEl = document.createElement('div');
-            lineEl.className = 'json-line';
-            lineEl.dataset.lineIndex = index;
-            lineEl.innerHTML = line.html;
+            // Row Container
+            const rowEl = document.createElement('div');
+            rowEl.className = 'json-line-row';
+            rowEl.dataset.lineIndex = index;
             
-            // Indentation
-            lineEl.style.paddingLeft = ((line.depth * 20) + 5) + 'px'; // +5 padding for text
+            // Gutter Cell (Number + Expander)
+            const gutterCell = document.createElement('div');
+            gutterCell.className = 'json-gutter-cell';
+            
+            const numSpan = document.createElement('span');
+            numSpan.textContent = String(index + 1);
+            numSpan.className = 'json-line-num-text';
+            gutterCell.appendChild(numSpan);
+
+            // Expander Placeholder
+            const expanderSpan = document.createElement('span');
+            expanderSpan.className = 'json-expander-placeholder';
+            
+            // Defensive: ensure line.type has content to expand (fix for primitive booleans showing expander)
+            // But 'collapsible' flag is set in addLine for open/close. 
+            // The issue reported "IsVirtual: false" showing expander. 
+            // This happens if _processValue sets collapsible=true for unexpected lines.
+            // Let's rely on line.collapsible which we trust is set correctly now (with previous fix).
+            // Actually, previous fix added `&& line.type === 'open'` check.
+            if (line.collapsible && line.type === 'open') {
+                 const expander = document.createElement('span');
+                 expander.className = 'json-expander expanded'; 
+                 expander.innerHTML = `<svg viewBox="0 0 16 16" width="14" height="14" fill="currentColor"><path d="M7.976 10.072l4.357-4.357.62.618L8.284 11h-.618L3 6.333l.619-.618 4.357 4.357z"/></svg>`;
+                 
+                 expander.addEventListener('click', (e) => {
+                     e.stopPropagation();
+                     this.toggleCollapse(index);
+                 });
+                 line.expanderElement = expander; // Store legacy ref just in case
+                 expanderSpan.appendChild(expander);
+            }
+            gutterCell.appendChild(expanderSpan);
+            
+            // Content Cell
+            const contentCell = document.createElement('div');
+            contentCell.className = 'json-content-cell';
+            contentCell.innerHTML = line.html;
+            contentCell.style.paddingLeft = ((line.depth * 20) + 5) + 'px'; 
             
             // Allow ellipsis click to expand
-            const ellipsis = lineEl.querySelector('.json-ellipsis');
+            const ellipsis = contentCell.querySelector('.json-ellipsis');
             if (ellipsis) {
                 ellipsis.addEventListener('click', (e) => {
                     e.stopPropagation();
@@ -159,8 +213,7 @@ class SimpleJsonViewer {
             if (line.depth > 0) {
                  const bgSize = line.depth * 20;
                  // Gradient: line at 5px (match text padding of 5px).
-                 // Text starts at 5px. Line should start at 5px.
-                 lineEl.style.backgroundImage = `repeating-linear-gradient(to right, 
+                 contentCell.style.backgroundImage = `repeating-linear-gradient(to right, 
                     transparent 0px, 
                     transparent 5px, 
                     rgba(0,0,0,0.2) 5px, 
@@ -168,59 +221,35 @@ class SimpleJsonViewer {
                     transparent 6px, 
                     transparent 20px
                  )`;
-                 lineEl.style.backgroundSize = `${bgSize}px 100%`;
-                 lineEl.style.backgroundRepeat = 'no-repeat';
+                 contentCell.style.backgroundSize = `${bgSize}px 100%`;
+                 contentCell.style.backgroundRepeat = 'no-repeat';
             }
+
+            // Append cells to row
+            rowEl.appendChild(gutterCell);
+            rowEl.appendChild(contentCell);
             
-            // Highlight handlers
-            lineEl.addEventListener('click', (e) => {
+            // Click handler on row
+            rowEl.addEventListener('click', (e) => {
+                this.handleLineClick(index);
+                e.stopPropagation();
+            });
+            // Gutter Click (Legacy support - now just row click)
+            gutterCell.addEventListener('click', (e) => {
                 this.handleLineClick(index);
                 e.stopPropagation();
             });
 
-            // Gutter Number Container
-            const gutterNum = document.createElement('div');
-            gutterNum.className = 'json-line-number';
-            
-            // Flex Layout: [Number][Expander] aligned to right
-
-            // Number Text
-            const numSpan = document.createElement('span');
-            numSpan.textContent = String(index + 1);
-            numSpan.className = 'json-line-num-text';
-            gutterNum.appendChild(numSpan);
-
-            // Expander Placeholder
-            const expanderSpan = document.createElement('span');
-            expanderSpan.className = 'json-expander-placeholder';
-            
-            if (line.collapsible) {
-                 const expander = document.createElement('span');
-                 expander.className = 'json-expander expanded'; // Default expanded
-                 // Use SVG for Monaco-like chevron (chevron-down)
-                 expander.innerHTML = `<svg viewBox="0 0 16 16" width="14" height="14" fill="currentColor"><path d="M7.976 10.072l4.357-4.357.62.618L8.284 11h-.618L3 6.333l.619-.618 4.357 4.357z"/></svg>`;
-                 
-                 expander.addEventListener('click', (e) => {
-                     e.stopPropagation();
-                     this.toggleCollapse(index);
-                 });
-                 // Store ref
-                 line.expanderElement = expander;
-                 expanderSpan.appendChild(expander);
-            }
-            gutterNum.appendChild(expanderSpan);
-            
-            // Listener
-            gutterNum.addEventListener('click', () => this.handleLineClick(index));
-
-            this.gutter.appendChild(gutterNum);
-
             // Store references
-            line.domElement = lineEl;
-            line.gutterElement = gutterNum;
-            this.content.appendChild(lineEl);
+            // Important: domElement now points to the ROW, so hiding it works for both gutter & content
+            line.domElement = rowEl; 
+            // We can remove gutterElement or just set it to null or rowEl to avoid breaking errors
+            line.gutterElement = null; 
+
+            this.scrollWrapper.appendChild(rowEl);
         });
     }
+
 
     _processValue(key, value, depth, path, isLast) {
         const isArray = Array.isArray(value);
@@ -347,15 +376,15 @@ class SimpleJsonViewer {
     
     handleLineClick(index) {
         // Remove highlight
-        this.content.querySelectorAll('.json-line.highlight').forEach(el => el.classList.remove('highlight'));
-        this.lines[index].domElement.classList.add('highlight');
+        this.scrollWrapper.querySelectorAll('.json-line-row.highlight').forEach(el => el.classList.remove('highlight'));
+        this.lines[index].domElement.classList.add('highlight'); // domElement is now the ROW
         
         // Remove brace match
-        this.content.querySelectorAll('.brace-match').forEach(el => el.classList.remove('brace-match'));
+        this.scrollWrapper.querySelectorAll('.brace-match').forEach(el => el.classList.remove('brace-match'));
         
         // Check for brace match
         const line = this.lines[index];
-        if (line.pairIndex !== null) {
+        if (line.pairIndex !== null && this.lines[line.pairIndex]) {
             line.domElement.classList.add('brace-match');
             this.lines[line.pairIndex].domElement.classList.add('brace-match');
         }
@@ -377,18 +406,22 @@ class SimpleJsonViewer {
                 line.expanderElement.classList.add('expanded');
                 line.expanderElement.classList.remove('collapsed');
             }
+            
             // Unhide children logic
-            for (let i = index + 1; i <= endIndex; i++) {
+            // We only unhide the rows. No gutter styling needed separately.
+            let i = index + 1;
+            while (i <= endIndex) {
                 const childLine = this.lines[i];
                 childLine.domElement.classList.remove('hidden');
-                childLine.gutterElement.classList.remove('hidden');
 
-                // If child is a COLLAPSED block, skip its contents
+                // If child is a COLLAPSED block, skip its contents (keep them hidden)
+                // But ensure we process the child itself and skip to its pair
                 if (childLine.collapsible && childLine.type === 'open' && childLine.domElement.classList.contains('collapsed')) {
                      if (childLine.pairIndex !== null) {
-                         i = childLine.pairIndex; // Skip to end of block
+                         i = childLine.pairIndex; // Skip to end of this collapsed block
                      }
                 }
+                i++;
             }
         } else {
             // COLLAPSE
@@ -401,7 +434,7 @@ class SimpleJsonViewer {
             // The placeholder on the current line shows the closing bracket instead
             for (let i = index + 1; i <= endIndex; i++) {
                 this.lines[i].domElement.classList.add('hidden');
-                this.lines[i].gutterElement.classList.add('hidden');
+                // Removed gutterElement hiding as it is inside the row
             }
         }
     }
@@ -463,27 +496,12 @@ class SimpleJsonViewer {
         
         // Collect text nodes to highlight
         const nodes = [];
-        // Helper to find text nodes in safe elements
-        const walk = (el) => {
-             // We only look inside specific classes to avoid messing up structural spans
-             if (el.classList.contains('json-key') || el.classList.contains('json-string') || el.classList.contains('json-number') || el.classList.contains('json-boolean') || el.classList.contains('json-null')) {
-                 if (el.children.length > 0) {
-                     // e.g. json-string with links
-                     Array.from(el.childNodes).forEach(child => {
-                         if (child.nodeType === 3) {
-                             if (child.textContent.trim()) nodes.push(child);
-                         } else if (child.tagName === 'A') {
-                             nodes.push(child); // We highlight inside the A tag element
-                         } 
-                     });
-                 } else {
-                     nodes.push(el); // We highlight the span element
-                 }
-             }
-        }; 
-
+        
         // Scan and populate
-        const candidates = this.content.querySelectorAll('.json-key, .json-string, .json-number, .json-boolean, .json-null');
+        // We scan check inside .json-content-cell (which contains the code)
+        // Previous code selected .json-key etc which are inside content cell.
+        // It's safe to search within scrollWrapper which contains all rows.
+        const candidates = this.scrollWrapper.querySelectorAll('.json-key, .json-string, .json-number, .json-boolean, .json-null');
         candidates.forEach(el => {
              if (el.children.length === 0) {
                  this._highlightInElement(el, regex);
@@ -520,7 +538,7 @@ class SimpleJsonViewer {
     }
 
     clearSearch() {
-        const matches = this.content.querySelectorAll('.json-search-match');
+        const matches = this.scrollWrapper.querySelectorAll('.json-search-match');
         matches.forEach(span => {
             const parent = span.parentNode;
             parent.replaceChild(document.createTextNode(span.textContent), span);

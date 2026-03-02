@@ -1,5 +1,5 @@
 .json-viewer-container {
-    display: flex; /* Kept for structure, but overridden by inline style if needed */
+    display: flex; 
     font-family: Consolas, monospace;
     font-size: 13px;
     line-height: 1.5;
@@ -7,43 +7,113 @@
     color: #333;
     border: 1px solid #ddd;
     position: relative;
-    /* overflow: auto;  REMOVED - scrolling is now handled by inner wrapper */
     height: 100%;
+    overflow: hidden;
 }
 
-.json-viewer-gutter {
+/* Base state: Not wrapped (Standard scrolling) */
+/* Wrapped state: No horizontal scroll, content wraps */
+.json-viewer-container.wrapped .json-viewer-scroll-view {
+    overflow-x: hidden;
+}
+
+/* Toolbar (Wrap Toggle) */
+.json-viewer-toolbar {
+    position: absolute;
+    top: 10px;
+    right: 20px;
+    z-index: 90; /* Below search panel (100) */
+    display: flex;
+    gap: 5px;
+}
+
+.json-viewer-toolbar button {
+    background: transparent; /* No background by default */
+    border: 1px solid transparent; 
+    cursor: pointer;
+    padding: 3px;
+    border-radius: 3px;
+    color: #666;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.json-viewer-toolbar button:hover {
+    background-color: #f0f0f0;
+    color: #333;
+}
+
+.json-viewer-toolbar button.active {
+    background-color: #e3f2fd;
+    color: #0366d6;
+    border-color: #bbdefb;
+}
+
+/* New Layout: Single list of Flex Rows */
+.json-line-row {
+    display: flex;
+    width: 100%; /* Full width */
+}
+
+/* Highlight happens on the row now */
+.json-line-row.highlight {
+    background-color: #e3f2fd; 
+}
+.json-line-row:hover {
+    background-color: #f1f8ff;
+}
+
+/* Gutter Cell */
+.json-gutter-cell {
+    flex: 0 0 auto; /* Don't grow/shrink */
+    min-width: 45px;
     background: #fff;
-    /* border-right: 1px solid #ddd; Removed border as requested */
     text-align: right;
-    padding: 0 5px;
+    padding: 0 5px 0 0; /* Right padding same as before */
     user-select: none;
-    min-width: 40px; /* Increased for expander */
     color: #999;
-    position: sticky;
+    border-right: 1px solid transparent; /* Optional separator */
+    position: sticky; /* Sticky horizontal scroll? */
     left: 0;
     z-index: 10;
-    /* Ensure gutter stretches */
-    min-height: 100%;
-}
-
-.json-line-number {
     display: flex;
-    justify-content: flex-end; /* Numbers align right */
-    align-items: center;
-    height: 1.5em; /* Match line height */
-    padding-right: 2px;
+    justify-content: flex-end;
+    /* Align items flex-start so number stays at top if multi-line */
+    align-items: flex-start; 
 }
 
+/* Number helper */
+.json-line-num-text {
+    margin-right: 2px;
+}
+
+/* Content Cell */
+.json-content-cell {
+    flex: 1 1 auto;
+    padding-left: 10px;
+    min-width: 0; /* Allow shrinking for text overflow */
+    white-space: pre; /* Default: no wrap */
+}
+
+/* When Wrapped */
+.json-viewer-container.wrapped .json-content-cell {
+    white-space: pre-wrap;
+    word-break: break-all;
+}
+
+
+/* Expander in gutter cell */
 .json-expander-placeholder {
     width: 14px;
-    height: 14px;
+    height: 1.5em; /* Match line height for consistent alignment */
     display: inline-flex;
     justify-content: center;
     align-items: center;
-    margin-left: 8px; /* Increased gap between number and expander */
+    margin-left: 8px; 
 }
 
-/* Expander in gutter */
+/* Expander styling */
 .json-expander {
     display: inline-flex;
     justify-content: center;
@@ -67,28 +137,20 @@
 
 .json-expander:hover {
     color: #333;
-    font-weight: bold;
 }
+
+/* --- REPLACING OLD SELECTORS TO AVOID CONFLICT --- */
+/* The previous .json-viewer-gutter and .json-viewer-content are deprecated */
+/* but we keep .json-viewer-scroll-view */
+.json-viewer-scroll-view {
     flex: 1;
-    padding-left: 10px;
-    position: relative;
-    white-space: pre;
-    /* overflow-x: auto; Remove this to prevent double scrollbars */
-    min-width: 0; /* Helps with flex child text overflow */
+    display: flex;
+    flex-direction: column; /* Stack rows */
+    overflow: auto; 
+    min-height: 0;
+    width: 100%;
 }
 
-.json-line {
-    display: block;
-    min-height: 1.5em; /* Ensure empty lines have height */
-}
-
-.json-line.highlight {
-    background-color: #e3f2fd;
-}
-
-.json-line:hover {
-    background-color: #f1f8ff;
-}
 
 .json-key {
     color: #a11;
@@ -192,7 +254,7 @@
     margin-left: 1px;
 }
 
-.json-line.collapsed .json-placeholder {
+.json-line-row.collapsed .json-placeholder {
     display: inline;
 }
 

@@ -9,6 +9,7 @@ copy to clipboard button
 auto format and indent (= if the string is a single raw json - it displays it in several lines)
 semi transparent vertical lines that make the user understand the start and the end of each node
 read only
+word wrap
 --
 colored stack
 copy to clipboard button
@@ -16,13 +17,16 @@ scrollable
 
 ---
 
-bug:
+wrap mode bugs:
+ selected line when non wrapped text mode blue background is not untill the end of the scroll
+ search up down scroll back horizontally not to exact position
+
+search panel should be prettier
+
+search bugs:
  search up \ down buttons should be disabled until search term in inserted
- anchor make the numbers crazy - see at the buttom - they are cut of the bottom
- anchor push numbers aside thenit comes to above 100 lines
  second ctrl+f goes to the entire page instead of the viewer
 
 tech dept:
- css file has errors - info not inside css classes
  export the class using one method instead of using the 'window'
  publish as npm package
