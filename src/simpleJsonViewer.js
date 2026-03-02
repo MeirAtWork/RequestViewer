@@ -457,6 +457,9 @@ class SimpleJsonViewer {
                  this.clearSearch();
                  this.searchPanel.querySelector('input').value = ''; 
                  this.updateSearchUI();
+                 // Return focus to container so subsequent shortcuts work
+                 // Use setTimeout to ensure layout updates and focus persists
+                 setTimeout(() => this.container.focus(), 0);
              }
         } else {
             const isHidden = this.searchPanel.style.display === 'none';
@@ -626,7 +629,7 @@ class SimpleJsonViewer {
             // Close on Escape
             if (e.key === 'Escape') {
                 this.toggleSearch(false);
-                this.container.focus(); // Return focus to container
+                // focus() is now handled inside toggleSearch(false)
             }
 
             // Prevent Browser Back on Backspace (unless inside input)

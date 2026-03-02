@@ -21,7 +21,6 @@ search panel should be prettier
 
 search bugs:
  search up \ down buttons should be disabled until search term in inserted
- second ctrl+f goes to the entire page instead of the viewer
 
 tech dept:
  export the class using one method instead of using the 'window'
