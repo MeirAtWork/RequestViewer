@@ -17,9 +17,6 @@ scrollable
 
 ---
 
-wrap mode bugs:
- search up down scroll back horizontally not to exact position
-
 search panel should be prettier
 
 search bugs:

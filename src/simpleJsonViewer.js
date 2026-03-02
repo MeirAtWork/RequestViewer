@@ -568,31 +568,37 @@ class SimpleJsonViewer {
     }
 
     _activateMatch() {
+        // Ensure match exists (array bounds check)
         const match = this.searchMatches[this.currentMatchIndex];
+        if (!match) return;
+
         match.classList.add('active');
-        match.scrollIntoView({ block: 'center', behavior: 'smooth' });
+        
+        // Use inline: 'center' to ensure horizontal scrolling centers the match
+        match.scrollIntoView({ block: 'center', inline: 'center', behavior: 'smooth' });
+
         this.updateSearchUI();
         
         // Auto-expand parents if hidden
-        let parentLine = match.closest('.json-line');
-        if (parentLine && parentLine.classList.contains('hidden')) {
-            // Traverse upwards logic needed? 
-            // For now, assume user expands. 
-            // Or implement "Reveal" logic later.
-            // Simplified "Reveal":
-            // Find index. Look back for collapsed. Uncollapse.
-             const index = parseInt(parentLine.dataset.lineIndex);
+        // Note: match is inside .json-content-cell inside .json-line-row
+        let parentRow = match.closest('.json-line-row');
+        
+        // Should we check if the row itself is hidden first?
+        if (parentRow && (parentRow.classList.contains('hidden') || parentRow.classList.contains('collapsed'))) {
+             const index = parseInt(parentRow.dataset.lineIndex);
              let currDepth = this.lines[index].depth;
              
-             // Backtrack
+             // Backtrack to find collapsed parents
              for(let i = index - 1; i >= 0; i--) {
                  const l = this.lines[i];
-                 if (l.depth < currDepth && l.collapsible) {
-                     if (l.domElement.classList.contains('collapsed')) {
+                 // If found a parent (less depth) that is collapsible
+                 if (l.depth < currDepth) {
+                     currDepth = l.depth;
+                     if (l.collapsible && l.domElement.classList.contains('collapsed')) {
                          this.toggleCollapse(i);
                      }
-                     currDepth = l.depth;
                  }
+                 if (currDepth === 0) break; // Reached root
              }
         }
     }
