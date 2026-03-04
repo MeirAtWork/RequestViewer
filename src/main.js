@@ -2,14 +2,8 @@ import './style.css'
 import { setupJsonViewer } from './jsonViewer.js'
 import { setupStackTraceViewer } from './stackTraceViewer.js'
 import { setupMonacoJsonViewer } from './monacoJsonViewer.js'
-import './simpleJsonViewer.js'
-// Import CSS for Vite (bundler) usage
-import './simpleJsonViewer.css'
+import { setupSimpleJsonViewer } from './simpleJsonViewer.js'
 
-// Trick SimpleJsonViewer into thinking CSS is loaded so it doesn't try to fetch 404
-const styleMarker = document.createElement('meta');
-styleMarker.id = 'simple-json-viewer-style';
-document.head.appendChild(styleMarker);
 
 document.querySelector('#app').innerHTML = `
   <div>
@@ -158,8 +152,7 @@ const jsonText = `{
 
 setupJsonViewer(document.querySelector('#jsonViewer'), 300, jsonText)
 
-// Setup Simple JSON Viewer
-window.createJsonViewer(document.querySelector('#simpleJsonViewer'), jsonText);
+setupSimpleJsonViewer(document.querySelector('#simpleJsonViewer'), 300, jsonText);
 
 setupMonacoJsonViewer(document.querySelector('#monacoJsonViewer'), 300, jsonText)
 

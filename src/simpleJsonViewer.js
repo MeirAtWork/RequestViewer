@@ -1,51 +1,27 @@
-// Export as a global function for ASP.NET use without imports
-window.createJsonViewer = function(container, data) {
-    return new SimpleJsonViewer(container, data);
+import './simpleJsonViewer.css'
+
+export function setupSimpleJsonViewer(element, height, text) {
+    return new SimpleJsonViewer(element, height, text);
 };
 
+// Export as a global function for ASP.NET use without imports
+window.setupSimpleJsonViewer = setupSimpleJsonViewer;
+
 class SimpleJsonViewer {
-    constructor(container, data) {
+    constructor(container, height, data) {
         this.container = container;
         this.data = typeof data === 'string' ? JSON.parse(data) : data;
         this.lines = []; // Stores { el, lineNo, depth, type, ... }
         this.searchMatches = [];
         this.currentMatchIndex = -1;
         this.isWrapped = true; // Default state: Wrapped
-        
-        // CSS Setup
-        // Check if style is already loaded (by ID or if we are in a dev environment that injected it)
-        // We look for the ID we set ourselves.
-        if (!document.getElementById('simple-json-viewer-style')) {
-            // Check if we are in environment where CSS might be imported via JS (bundlers often inject <style> tags)
-            // It's hard to detect if the style is already applied without checking computed styles or a marker.
 
-            // Fallback: Try to inject the link, but only if not found.
-            // If the user imports the CSS in their bundler, they should either give it this ID 
-            // OR we can make this logic optional via config?
-            // For now, let's just try to load it. 
-            // To support the "Vite Dev" case where we might import it in main.js:
-            // If main.js imports it, it's in a <style> tag.
-            // If we add the link, it might be redundant or fail (404).
-            
-            // Allow disabling auto-css via global flag or something? 
-            // No, let's just try to find the file.
-            
-            const link = document.createElement('link');
-            link.id = 'simple-json-viewer-style';
-            link.rel = 'stylesheet';
-            link.href = 'simpleJsonViewer.css'; 
-            
-            // Only append if it looks like it's needed? 
-            // We append. If 404, it's just a console error.
-            document.head.appendChild(link);
-        }
-
-        this.initDOM();
+        this.initDOM(height);
         this.render(); // Initial Render
         this.initEvents();
     }
 
-    initDOM() {
+    initDOM(height) {
         this.container.classList.add('json-viewer-container');
         if (this.isWrapped) {
             this.container.classList.add('wrapped');
@@ -57,6 +33,7 @@ class SimpleJsonViewer {
         this.container.style.overflow = 'hidden'; 
         this.container.style.display = 'flex';
         this.container.style.flexDirection = 'column';
+        this.container.style.height = height + 'px';
         
         // Make container focusable so it can capture key events
         if (!this.container.hasAttribute('tabindex')) {
