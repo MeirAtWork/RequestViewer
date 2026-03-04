@@ -104,9 +104,10 @@ class SimpleJsonViewer {
                     <path fill-rule="evenodd" clip-rule="evenodd" d="M8.00004 10.4142L11.2929 7.12132L12.7071 8.53553L8.00004 13.2426L3.29294 8.53553L4.70715 7.12132L8.00004 10.4142Z" transform="translate(0, -2)"/>
                 </svg>
             </button>
-            <span class="search-count" style="margin-left:5px; font-size: 11px; color:#666; min-width: 60px;"></span>
+            <span class="search-count"></span>
+            <div class="json-search-sep"></div>
             <button class="json-search-btn close" title="Close">
-                <svg width="15" height="15" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" fill="currentColor"><path fill-rule="evenodd" clip-rule="evenodd" d="M8 8.70711L11.6464 12.3536L12.3536 11.6464L8.70711 8L12.3536 4.35355L11.6464 3.64645L8 7.29289L4.35355 3.64645L3.64645 4.35355L7.29289 8L3.64645 11.6464L4.35355 12.3536L8 8.70711Z"/></svg>
+                <svg width="16" height="16" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" fill="currentColor"><path fill-rule="evenodd" clip-rule="evenodd" d="M8 8.70711L11.6464 12.3536L12.3536 11.6464L8.70711 8L12.3536 4.35355L11.6464 3.64645L8 7.29289L4.35355 3.64645L3.64645 4.35355L7.29289 8L3.64645 11.6464L4.35355 12.3536L8 8.70711Z"/></svg>
             </button>
         `;
         this.container.appendChild(this.searchPanel);

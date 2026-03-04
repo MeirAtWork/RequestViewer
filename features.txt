@@ -17,8 +17,6 @@ scrollable
 
 ---
 
-search panel should be prettier
-
 tech dept:
  export the class using one method instead of using the 'window'
  publish as npm package
