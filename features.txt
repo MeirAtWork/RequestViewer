@@ -22,7 +22,6 @@ tech dept:
  publish as npm package
 
 bugs on monolight side:
-anchors are + sign
 gutter numbers are pushed left at line 100
 in line 100 horizontal lines are corrupted
 regular text is not shown

@@ -1,4 +1,4 @@
-.json-viewer-container {
+.sv-json-viewer-container {
     display: flex; 
     font-family: Consolas, monospace;
     font-size: 13px;
@@ -13,12 +13,12 @@
 
 /* Base state: Not wrapped (Standard scrolling) */
 /* Wrapped state: No horizontal scroll, content wraps */
-.json-viewer-container.wrapped .json-viewer-scroll-view {
+.sv-json-viewer-container.sv-wrapped .sv-json-viewer-scroll-view {
     overflow-x: hidden;
 }
 
 /* Toolbar (Wrap Toggle) */
-.json-viewer-toolbar {
+.sv-json-viewer-toolbar {
     position: absolute;
     top: 10px;
     right: 20px;
@@ -27,7 +27,7 @@
     gap: 5px;
 }
 
-.json-viewer-toolbar button {
+.sv-json-viewer-toolbar button {
     background: transparent; /* No background by default */
     border: 1px solid transparent; 
     cursor: pointer;
@@ -39,41 +39,41 @@
     justify-content: center;
 }
 
-.json-viewer-toolbar button:hover {
+.sv-json-viewer-toolbar button:hover {
     background-color: #f0f0f0;
     color: #333;
 }
 
-.json-viewer-toolbar button.active {
+.sv-json-viewer-toolbar button.sv-active {
     background-color: #e3f2fd;
     color: #0366d6;
     border-color: #bbdefb;
 }
 
 /* New Layout: Single list of Flex Rows */
-.json-line-row {
+.sv-json-line-row {
     display: flex;
     min-width: 100%; /* Stretch to at least container width */
     width: fit-content; /* Allow growing beyond container if content is wide */
 }
 
 /* Ensure wrapped mode respects container width */
-.json-viewer-container.wrapped .json-line-row {
+.sv-json-viewer-container.sv-wrapped .sv-json-line-row {
     width: 100%; /* Constrain to container */
     min-width: 0;
     box-sizing: border-box; /* Good practice */
 }
 
 /* Highlight happens on the row now */
-.json-line-row.highlight {
+.sv-json-line-row.sv-highlight {
     background-color: #e3f2fd; 
 }
-.json-line-row:hover {
+.sv-json-line-row:hover {
     background-color: #f1f8ff;
 }
 
 /* Gutter Cell */
-.json-gutter-cell {
+.sv-json-gutter-cell {
     flex: 0 0 auto; /* Don't grow/shrink */
     min-width: 45px;
     background: #fff;
@@ -92,12 +92,12 @@
 }
 
 /* Number helper */
-.json-line-num-text {
+.sv-json-line-num-text {
     margin-right: 2px;
 }
 
 /* Content Cell */
-.json-content-cell {
+.sv-json-content-cell {
     flex: 1 1 auto;
     padding-left: 10px;
     min-width: 0; /* Allow shrinking for text overflow */
@@ -105,14 +105,14 @@
 }
 
 /* When Wrapped */
-.json-viewer-container.wrapped .json-content-cell {
+.sv-json-viewer-container.sv-wrapped .sv-json-content-cell {
     white-space: pre-wrap;
     word-break: break-all;
 }
 
 
 /* Expander in gutter cell */
-.json-expander-placeholder {
+.sv-json-expander-placeholder {
     width: 14px;
     height: 1.5em; /* Match line height for consistent alignment */
     display: inline-flex;
@@ -122,7 +122,7 @@
 }
 
 /* Expander styling */
-.json-expander {
+.sv-json-expander {
     display: inline-flex;
     justify-content: center;
     align-items: center;
@@ -134,23 +134,23 @@
     color: #999;
 }
 
-.json-expander svg {
+.sv-json-expander svg {
     display: block;
     transition: transform 0.1s ease;
 }
 
-.json-expander.collapsed svg {
+.sv-json-expander.sv-collapsed svg {
     transform: rotate(-90deg);
 }
 
-.json-expander:hover {
+.sv-json-expander:hover {
     color: #333;
 }
 
 /* --- REPLACING OLD SELECTORS TO AVOID CONFLICT --- */
 /* The previous .json-viewer-gutter and .json-viewer-content are deprecated */
 /* but we keep .json-viewer-scroll-view */
-.json-viewer-scroll-view {
+.sv-json-viewer-scroll-view {
     flex: 1;
     display: flex;
     flex-direction: column; /* Stack rows */
@@ -160,28 +160,28 @@
 }
 
 
-.json-key {
+.sv-json-key {
     color: #a11;
     font-weight: bold;
 }
 
-.json-string {
+.sv-json-string {
     color: #28a745;
 }
 
-.json-number {
+.sv-json-number {
     color: #d73a49;
 }
 
-.json-boolean {
+.sv-json-boolean {
     color: #005cc5;
 }
 
-.json-null {
+.sv-json-null {
     color: #6f42c1;
 }
 
-.json-link {
+.sv-json-link {
     color: #0366d6;
     text-decoration: underline;
     cursor: pointer;
@@ -189,18 +189,18 @@
 
 /* Old .json-expander definition removed to fix duplicate and unwanted styling */
 
-.hidden {
+.sv-hidden {
     display: none;
 }
 
-.collapsed-indicator {
+.sv-collapsed-indicator {
     color: #999;
     font-style: italic;
     cursor: pointer;
 }
 
 /* Search Panel */
-.json-viewer-search-panel {
+.sv-json-viewer-search-panel {
     position: absolute;
     top: 8px;
     right: 18px;
@@ -218,11 +218,11 @@
 }
 
 /* Ensure hidden overrides flex */
-.json-viewer-search-panel.hidden {
+.sv-json-viewer-search-panel.sv-hidden {
     display: none !important;
 }
 
-.json-search-input {
+.sv-json-search-input {
     padding: 4px 8px;
     border: 1px solid transparent;
     border-radius: 4px;
@@ -234,13 +234,13 @@
     transition: all 0.2s;
 }
 
-.json-search-input:focus {
+.sv-json-search-input:focus {
     background-color: #ffffff;
     border-color: #0366d6;
     box-shadow: 0 0 0 2px rgba(3, 102, 214, 0.3);
 }
 
-.json-search-btn {
+.sv-json-search-btn {
     width: 28px;
     height: 28px;
     padding: 0;
@@ -255,30 +255,30 @@
     transition: background-color 0.1s, color 0.1s;
 }
 
-.json-search-btn:hover {
+.sv-json-search-btn:hover {
     background-color: #eaecef;
     color: #24292e;
 }
 
-.json-search-btn:active {
+.sv-json-search-btn:active {
     background-color: #dcdeE2;
 }
 
-.json-search-btn:disabled {
+.sv-json-search-btn:disabled {
     opacity: 0.4;
     cursor: default;
     background-color: transparent !important; /* Override hover */
     color: #959da5;
 }
 
-.json-search-btn svg {
+.sv-json-search-btn svg {
     display: block;
     width: 16px;
     height: 16px;
 }
 
 /* Match Count */
-.search-count {
+.sv-search-count {
     font-size: 12px;
     color: #586069;
     padding: 0 8px;
@@ -288,36 +288,36 @@
 }
 
 /* Separator */
-.json-search-sep {
+.sv-json-search-sep {
     width: 1px;
     height: 16px;
     background-color: #e1e4e8;
     margin: 0 2px;
 }
 
-.json-search-match {
+.sv-json-search-match {
     background-color: #fff5b1; /* Lighter yellow */
     outline: 1px solid #f9c513; 
 }
 
-.json-search-match.active {
+.sv-json-search-match.sv-active {
     background-color: #fd8c00; /* Orange */
     color: white; /* Ensure text is readable on orange */
     outline: 1px solid #e07b00;
 }
 
 /* Collapsible placeholder */
-.json-placeholder {
+.sv-json-placeholder {
     display: none;
     color: #666;
     margin-left: 1px;
 }
 
-.json-line-row.collapsed .json-placeholder {
+.sv-json-line-row.sv-collapsed .sv-json-placeholder {
     display: inline;
 }
 
-.json-ellipsis {
+.sv-json-ellipsis {
     cursor: pointer;
     background: #e8eaed;
     color: #5f6368;
@@ -333,12 +333,12 @@
     font-size: 14px; /* Ensure consistent size */
 }
 
-.json-ellipsis:hover {
+.sv-json-ellipsis:hover {
     background: #dcdcdc;
     color: #202124;
 }
 
-.brace-match .json-bracket {
+.sv-brace-match .sv-json-bracket {
     background-color: #bbdefb;
     outline: 1px solid #64b5f6;
     color: black;

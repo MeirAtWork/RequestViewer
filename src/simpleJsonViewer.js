@@ -22,9 +22,9 @@ class SimpleJsonViewer {
     }
 
     initDOM(height) {
-        this.container.classList.add('json-viewer-container');
+        this.container.classList.add('sv-json-viewer-container');
         if (this.isWrapped) {
-            this.container.classList.add('wrapped');
+            this.container.classList.add('sv-wrapped');
         }
         this.container.innerHTML = '';
         
@@ -43,9 +43,9 @@ class SimpleJsonViewer {
 
         // Toolbar (Wrap Toggle)
         const toolbar = document.createElement('div');
-        toolbar.className = 'json-viewer-toolbar';
+        toolbar.className = 'sv-json-viewer-toolbar';
         toolbar.innerHTML = `
-            <button class="json-wrap-toggle ${this.isWrapped ? 'active' : ''}" title="Toggle Word Wrap">
+            <button class="sv-json-wrap-toggle ${this.isWrapped ? 'sv-active' : ''}" title="Toggle Word Wrap">
                 <!-- Text Wrap Icon -->
                 <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
                     <path fill-rule="evenodd" d="M2.5 3.5a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5zm0 9a.5.5 0 0 1 .5-.5h6a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5zm0-4.5a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5z"/>
@@ -54,36 +54,36 @@ class SimpleJsonViewer {
         `;
         this.container.appendChild(toolbar);
 
-        const wrapBtn = toolbar.querySelector('.json-wrap-toggle');
+        const wrapBtn = toolbar.querySelector('.sv-json-wrap-toggle');
         wrapBtn.addEventListener('click', () => {
              this.isWrapped = !this.isWrapped;
              if (this.isWrapped) {
-                 this.container.classList.add('wrapped');
-                 wrapBtn.classList.add('active');
+                 this.container.classList.add('sv-wrapped');
+                 wrapBtn.classList.add('sv-active');
              } else {
-                 this.container.classList.remove('wrapped');
-                 wrapBtn.classList.remove('active');
+                 this.container.classList.remove('sv-wrapped');
+                 wrapBtn.classList.remove('sv-active');
              }
         });
 
         // Search Panel (Appended to OUTER)
         this.searchPanel = document.createElement('div');
-        this.searchPanel.className = 'json-viewer-search-panel hidden';
+        this.searchPanel.className = 'sv-json-viewer-search-panel sv-hidden';
         this.searchPanel.innerHTML = `
-            <input type="text" class="json-search-input" placeholder="Search...">
-            <button class="json-search-btn prev" title="Previous match">
+            <input type="text" class="sv-json-search-input" placeholder="Search...">
+            <button class="sv-json-search-btn sv-prev" title="Previous match">
                 <svg width="16" height="16" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" fill="currentColor">
                     <path fill-rule="evenodd" clip-rule="evenodd" d="M8.00004 5.58579L4.70715 8.87868L3.29294 7.46447L8.00004 2.75736L12.7071 7.46447L11.2929 8.87868L8.00004 5.58579Z" transform="translate(0, 2)"/>
                 </svg>
             </button>
-            <button class="json-search-btn next" title="Next match">
+            <button class="sv-json-search-btn sv-next" title="Next match">
                 <svg width="16" height="16" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" fill="currentColor">
                     <path fill-rule="evenodd" clip-rule="evenodd" d="M8.00004 10.4142L11.2929 7.12132L12.7071 8.53553L8.00004 13.2426L3.29294 8.53553L4.70715 7.12132L8.00004 10.4142Z" transform="translate(0, -2)"/>
                 </svg>
             </button>
-            <span class="search-count"></span>
-            <div class="json-search-sep"></div>
-            <button class="json-search-btn close" title="Close">
+            <span class="sv-search-count"></span>
+            <div class="sv-json-search-sep"></div>
+            <button class="sv-json-search-btn sv-close" title="Close">
                 <svg width="16" height="16" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" fill="currentColor"><path fill-rule="evenodd" clip-rule="evenodd" d="M8 8.70711L11.6464 12.3536L12.3536 11.6464L8.70711 8L12.3536 4.35355L11.6464 3.64645L8 7.29289L4.35355 3.64645L3.64645 4.35355L7.29289 8L3.64645 11.6464L4.35355 12.3536L8 8.70711Z"/></svg>
             </button>
         `;
@@ -91,7 +91,7 @@ class SimpleJsonViewer {
 
         // Scroll Wrapper (The actual scrollable area)
         this.scrollWrapper = document.createElement('div');
-        this.scrollWrapper.className = 'json-viewer-scroll-view';
+        this.scrollWrapper.className = 'sv-json-viewer-scroll-view';
         // Note: Styles for scroll-view are in CSS now (flex col)
         this.container.appendChild(this.scrollWrapper);
 
@@ -99,9 +99,9 @@ class SimpleJsonViewer {
         // We just append rows directly to scrollWrapper
         
         const input = this.searchPanel.querySelector('input');
-        const btnPrev = this.searchPanel.querySelector('.prev');
-        const btnNext = this.searchPanel.querySelector('.next');
-        const btnClose = this.searchPanel.querySelector('.close');
+        const btnPrev = this.searchPanel.querySelector('.sv-prev');
+        const btnNext = this.searchPanel.querySelector('.sv-next');
+        const btnClose = this.searchPanel.querySelector('.sv-close');
 
         input.addEventListener('input', () => this.performSearch(input.value));
         input.addEventListener('keydown', (e) => {
@@ -141,21 +141,21 @@ class SimpleJsonViewer {
         this.lines.forEach((line, index) => {
             // Row Container
             const rowEl = document.createElement('div');
-            rowEl.className = 'json-line-row';
+            rowEl.className = 'sv-json-line-row';
             rowEl.dataset.lineIndex = index;
             
             // Gutter Cell (Number + Expander)
             const gutterCell = document.createElement('div');
-            gutterCell.className = 'json-gutter-cell';
+            gutterCell.className = 'sv-json-gutter-cell';
             
             const numSpan = document.createElement('span');
             numSpan.textContent = String(index + 1);
-            numSpan.className = 'json-line-num-text';
+            numSpan.className = 'sv-json-line-num-text';
             gutterCell.appendChild(numSpan);
 
             // Expander Placeholder
             const expanderSpan = document.createElement('span');
-            expanderSpan.className = 'json-expander-placeholder';
+            expanderSpan.className = 'sv-json-expander-placeholder';
             
             // Defensive: ensure line.type has content to expand (fix for primitive booleans showing expander)
             // But 'collapsible' flag is set in addLine for open/close. 
@@ -165,7 +165,7 @@ class SimpleJsonViewer {
             // Actually, previous fix added `&& line.type === 'open'` check.
             if (line.collapsible && line.type === 'open') {
                  const expander = document.createElement('span');
-                 expander.className = 'json-expander expanded'; 
+                 expander.className = 'sv-json-expander sv-expanded'; 
                  expander.innerHTML = `<svg viewBox="0 0 16 16" width="14" height="14" fill="currentColor"><path d="M7.976 10.072l4.357-4.357.62.618L8.284 11h-.618L3 6.333l.619-.618 4.357 4.357z"/></svg>`;
                  
                  expander.addEventListener('click', (e) => {
@@ -179,12 +179,12 @@ class SimpleJsonViewer {
             
             // Content Cell
             const contentCell = document.createElement('div');
-            contentCell.className = 'json-content-cell';
+            contentCell.className = 'sv-json-content-cell';
             contentCell.innerHTML = line.html;
             contentCell.style.paddingLeft = ((line.depth * 20) + 5) + 'px'; 
             
             // Allow ellipsis click to expand
-            const ellipsis = contentCell.querySelector('.json-ellipsis');
+            const ellipsis = contentCell.querySelector('.sv-json-ellipsis');
             if (ellipsis) {
                 ellipsis.addEventListener('click', (e) => {
                     e.stopPropagation();
@@ -241,7 +241,7 @@ class SimpleJsonViewer {
         if (key !== null) {
             // Check if array item (key is index but we passed null for array items below?)
             // If key is present, it's an object property
-            prefix = `<span class="json-key">"${key}"</span>: `;
+            prefix = `<span class="sv-json-key">"${key}"</span>: `;
         }
         
         if (isObject) {
@@ -263,18 +263,18 @@ class SimpleJsonViewer {
                 // So the current logic won't highlight anything for empty objects.
                 // That seems acceptable as they are small and don't need matching help.
                 
-                let html = `${prefix}<span class="json-punctuation">${openChar}${closeChar}</span>`;
-                if (!isLast) html += '<span class="json-punctuation">,</span>';
+                let html = `${prefix}<span class="sv-json-punctuation">${openChar}${closeChar}</span>`;
+                if (!isLast) html += '<span class="sv-json-punctuation">,</span>';
                 this.addLine(depth, html);
             } else {
                 // Opening line
                 // "key": { 
-                let openHtml = `${prefix}<span class="json-punctuation json-bracket">${openChar}</span>`;
+                let openHtml = `${prefix}<span class="sv-json-punctuation sv-json-bracket">${openChar}</span>`;
                 
                 // Placeholder visible only when collapsed
                 // Should show: ... } (optionally comma)
                 // The "..." part should be clickable to expand
-                let suffix = (!isLast) ? '<span class="json-punctuation">,</span>' : '';
+                let suffix = (!isLast) ? '<span class="sv-json-punctuation">,</span>' : '';
                 // We wrap the ellipsis in a span that handles the click.
                 // The closeChar and suffix are just text/punctuation.
                 
@@ -285,7 +285,7 @@ class SimpleJsonViewer {
                 // But render loop builds string HTML.
                 // So binding happens after `innerHTML = line.html`.
                 
-                openHtml += `<span class="json-placeholder"><span class="json-ellipsis">\u22EF</span><span class="json-punctuation json-bracket">${closeChar}</span>${suffix}</span>`;
+                openHtml += `<span class="sv-json-placeholder"><span class="sv-json-ellipsis">\u22EF</span><span class="sv-json-punctuation sv-json-bracket">${closeChar}</span>${suffix}</span>`;
                 
                 const openLineIndex = this.lines.length;
                 this.addLine(depth, openHtml, true, 'open');
@@ -304,8 +304,8 @@ class SimpleJsonViewer {
                 });
 
                 // Closing line
-                let closeHtml = `<span class="json-punctuation json-bracket">${closeChar}</span>`;
-                if (!isLast) closeHtml += '<span class="json-punctuation">,</span>';
+                let closeHtml = `<span class="sv-json-punctuation sv-json-bracket">${closeChar}</span>`;
+                if (!isLast) closeHtml += '<span class="sv-json-punctuation">,</span>';
                 const closeLineIndex = this.lines.length; 
                 this.addLine(depth, closeHtml, false, 'close');
                 
@@ -316,7 +316,7 @@ class SimpleJsonViewer {
         } else {
             // Primitive
             let lineHtml = prefix + this._formatPrimitive(value);
-            if (!isLast) lineHtml += '<span class="json-punctuation">,</span>';
+            if (!isLast) lineHtml += '<span class="sv-json-punctuation">,</span>';
             this.addLine(depth, lineHtml);
         }
     }
@@ -341,34 +341,34 @@ class SimpleJsonViewer {
                 .replace(/>/g, '&gt;');
              
             // Detect links
-            const formatted = escaped.replace(urlRegex, '<a class="json-link" href="$1" target="_blank">$1</a>');
-            return `<span class="json-string">"${formatted}"</span>`;
+            const formatted = escaped.replace(urlRegex, '<a class="sv-json-link" href="$1" target="_blank">$1</a>');
+            return `<span class="sv-json-string">"${formatted}"</span>`;
         }
         if (typeof value === 'number') {
-            return `<span class="json-number">${value}</span>`;
+            return `<span class="sv-json-number">${value}</span>`;
         }
         if (typeof value === 'boolean') {
-            return `<span class="json-boolean">${value}</span>`;
+            return `<span class="sv-json-boolean">${value}</span>`;
         }
         if (value === null) {
-            return `<span class="json-null">null</span>`;
+            return `<span class="sv-json-null">null</span>`;
         }
         return String(value);
     }
     
     handleLineClick(index) {
         // Remove highlight
-        this.scrollWrapper.querySelectorAll('.json-line-row.highlight').forEach(el => el.classList.remove('highlight'));
-        this.lines[index].domElement.classList.add('highlight'); // domElement is now the ROW
+        this.scrollWrapper.querySelectorAll('.sv-json-line-row.sv-highlight').forEach(el => el.classList.remove('sv-highlight'));
+        this.lines[index].domElement.classList.add('sv-highlight'); // domElement is now the ROW
         
         // Remove brace match
-        this.scrollWrapper.querySelectorAll('.brace-match').forEach(el => el.classList.remove('brace-match'));
+        this.scrollWrapper.querySelectorAll('.sv-brace-match').forEach(el => el.classList.remove('sv-brace-match'));
         
         // Check for brace match
         const line = this.lines[index];
         if (line.pairIndex !== null && this.lines[line.pairIndex]) {
-            line.domElement.classList.add('brace-match');
-            this.lines[line.pairIndex].domElement.classList.add('brace-match');
+            line.domElement.classList.add('sv-brace-match');
+            this.lines[line.pairIndex].domElement.classList.add('sv-brace-match');
         }
     }
 
@@ -379,14 +379,14 @@ class SimpleJsonViewer {
         const endIndex = line.pairIndex;
         if (endIndex === null) return; 
 
-        const isCollapsed = line.domElement.classList.contains('collapsed');
+        const isCollapsed = line.domElement.classList.contains('sv-collapsed');
         
         if (isCollapsed) {
             // EXPAND
-            line.domElement.classList.remove('collapsed');
+            line.domElement.classList.remove('sv-collapsed');
             if (line.expanderElement) {
-                line.expanderElement.classList.add('expanded');
-                line.expanderElement.classList.remove('collapsed');
+                line.expanderElement.classList.add('sv-expanded');
+                line.expanderElement.classList.remove('sv-collapsed');
             }
             
             // Unhide children logic
@@ -394,11 +394,11 @@ class SimpleJsonViewer {
             let i = index + 1;
             while (i <= endIndex) {
                 const childLine = this.lines[i];
-                childLine.domElement.classList.remove('hidden');
+                childLine.domElement.classList.remove('sv-hidden');
 
                 // If child is a COLLAPSED block, skip its contents (keep them hidden)
                 // But ensure we process the child itself and skip to its pair
-                if (childLine.collapsible && childLine.type === 'open' && childLine.domElement.classList.contains('collapsed')) {
+                if (childLine.collapsible && childLine.type === 'open' && childLine.domElement.classList.contains('sv-collapsed')) {
                      if (childLine.pairIndex !== null) {
                          i = childLine.pairIndex; // Skip to end of this collapsed block
                      }
@@ -407,15 +407,15 @@ class SimpleJsonViewer {
             }
         } else {
             // COLLAPSE
-            line.domElement.classList.add('collapsed');
+            line.domElement.classList.add('sv-collapsed');
             if (line.expanderElement) {
-                line.expanderElement.classList.add('collapsed');
-                line.expanderElement.classList.remove('expanded');
+                line.expanderElement.classList.add('sv-collapsed');
+                line.expanderElement.classList.remove('sv-expanded');
             }
             // Hide everything in between including closing bracket line
             // The placeholder on the current line shows the closing bracket instead
             for (let i = index + 1; i <= endIndex; i++) {
-                this.lines[i].domElement.classList.add('hidden');
+                this.lines[i].domElement.classList.add('sv-hidden');
                 // Removed gutterElement hiding as it is inside the row
             }
         }
@@ -426,7 +426,7 @@ class SimpleJsonViewer {
         if (forceState !== undefined) {
              if (forceState) {
                  this.searchPanel.style.display = 'flex';
-                 this.searchPanel.classList.remove('hidden');
+                 this.searchPanel.classList.remove('sv-hidden');
                  const input = this.searchPanel.querySelector('input');
                  input.focus();
                  if (input.value) {
@@ -435,7 +435,7 @@ class SimpleJsonViewer {
                  }
              } else {
                  this.searchPanel.style.display = 'none';
-                 this.searchPanel.classList.add('hidden');
+                 this.searchPanel.classList.add('sv-hidden');
                  this.clearSearch();
                  this.searchPanel.querySelector('input').value = ''; 
                  this.updateSearchUI();
@@ -448,7 +448,7 @@ class SimpleJsonViewer {
             if (isHidden) {
                 // OPENING
                 this.searchPanel.style.display = 'flex';
-                this.searchPanel.classList.remove('hidden');
+                this.searchPanel.classList.remove('sv-hidden');
                 const input = this.searchPanel.querySelector('input');
                 input.focus();
                 
@@ -462,7 +462,7 @@ class SimpleJsonViewer {
             } else {
                 // CLOSING
                 this.searchPanel.style.display = 'none';
-                this.searchPanel.classList.add('hidden');
+                this.searchPanel.classList.add('sv-hidden');
                 // CLEANUP VISUALS AND INPUT
                 this.clearSearch(); // Clears highlights
                 // User requirement: "you see the previous term on ui" -> implied they DON'T want to see it?
@@ -489,7 +489,7 @@ class SimpleJsonViewer {
         // We scan check inside .json-content-cell (which contains the code)
         // Previous code selected .json-key etc which are inside content cell.
         // It's safe to search within scrollWrapper which contains all rows.
-        const candidates = this.scrollWrapper.querySelectorAll('.json-key, .json-string, .json-number, .json-boolean, .json-null');
+        const candidates = this.scrollWrapper.querySelectorAll('.sv-json-key, .sv-json-string, .sv-json-number, .sv-json-boolean, .sv-json-null');
         candidates.forEach(el => {
              if (el.children.length === 0) {
                  this._highlightInElement(el, regex);
@@ -518,15 +518,15 @@ class SimpleJsonViewer {
         if (!regex.test(text)) return;
         
         // This regex re-construction logic handles finding all matches
-        const newHtml = text.replace(regex, (match) => `<span class="json-search-match">${match}</span>`);
+        const newHtml = text.replace(regex, (match) => `<span class="sv-json-search-match">${match}</span>`);
         el.innerHTML = newHtml;
         
-        const matches = el.querySelectorAll('.json-search-match');
+        const matches = el.querySelectorAll('.sv-json-search-match');
         matches.forEach(m => this.searchMatches.push(m));
     }
 
     clearSearch() {
-        const matches = this.scrollWrapper.querySelectorAll('.json-search-match');
+        const matches = this.scrollWrapper.querySelectorAll('.sv-json-search-match');
         matches.forEach(span => {
             const parent = span.parentNode;
             parent.replaceChild(document.createTextNode(span.textContent), span);
@@ -540,7 +540,7 @@ class SimpleJsonViewer {
     nextMatch() {
         if (!this.searchMatches.length) return;
         if (this.currentMatchIndex >= 0) {
-            this.searchMatches[this.currentMatchIndex].classList.remove('active');
+            this.searchMatches[this.currentMatchIndex].classList.remove('sv-active');
         }
         this.currentMatchIndex = (this.currentMatchIndex + 1) % this.searchMatches.length;
         this._activateMatch();
@@ -549,7 +549,7 @@ class SimpleJsonViewer {
     prevMatch() {
         if (!this.searchMatches.length) return;
         if (this.currentMatchIndex >= 0) {
-            this.searchMatches[this.currentMatchIndex].classList.remove('active');
+            this.searchMatches[this.currentMatchIndex].classList.remove('sv-active');
         }
         this.currentMatchIndex = (this.currentMatchIndex - 1 + this.searchMatches.length) % this.searchMatches.length;
         this._activateMatch();
@@ -560,7 +560,7 @@ class SimpleJsonViewer {
         const match = this.searchMatches[this.currentMatchIndex];
         if (!match) return;
 
-        match.classList.add('active');
+        match.classList.add('sv-active');
         
         // Use inline: 'center' to ensure horizontal scrolling centers the match
         match.scrollIntoView({ block: 'center', inline: 'center', behavior: 'smooth' });
@@ -569,10 +569,10 @@ class SimpleJsonViewer {
         
         // Auto-expand parents if hidden
         // Note: match is inside .json-content-cell inside .json-line-row
-        let parentRow = match.closest('.json-line-row');
+        let parentRow = match.closest('.sv-json-line-row');
         
         // Should we check if the row itself is hidden first?
-        if (parentRow && (parentRow.classList.contains('hidden') || parentRow.classList.contains('collapsed'))) {
+        if (parentRow && (parentRow.classList.contains('sv-hidden') || parentRow.classList.contains('sv-collapsed'))) {
              const index = parseInt(parentRow.dataset.lineIndex);
              let currDepth = this.lines[index].depth;
              
@@ -582,7 +582,7 @@ class SimpleJsonViewer {
                  // If found a parent (less depth) that is collapsible
                  if (l.depth < currDepth) {
                      currDepth = l.depth;
-                     if (l.collapsible && l.domElement.classList.contains('collapsed')) {
+                     if (l.collapsible && l.domElement.classList.contains('sv-collapsed')) {
                          this.toggleCollapse(i);
                      }
                  }
@@ -592,9 +592,9 @@ class SimpleJsonViewer {
     }
 
     updateSearchUI() {
-        const count = this.searchPanel.querySelector('.search-count');
-        const prevBtn = this.searchPanel.querySelector('.prev');
-        const nextBtn = this.searchPanel.querySelector('.next');
+        const count = this.searchPanel.querySelector('.sv-search-count');
+        const prevBtn = this.searchPanel.querySelector('.sv-prev');
+        const nextBtn = this.searchPanel.querySelector('.sv-next');
         const input = this.searchPanel.querySelector('input');
 
         const hasMatches = this.searchMatches.length > 0;
