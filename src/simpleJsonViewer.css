@@ -75,7 +75,7 @@
 /* Gutter Cell */
 .sv-json-gutter-cell {
     flex: 0 0 auto; /* Don't grow/shrink */
-    min-width: 45px;
+    min-width: 60px;
     background: #fff;
     text-align: right;
     padding: 0 5px 0 0; /* Right padding same as before */
