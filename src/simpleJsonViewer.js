@@ -141,6 +141,10 @@ class SimpleJsonViewer {
         // Ensure hidden by default (fix specificity issues)
         this.searchPanel.style.display = 'none';
         
+        // Initial state disable
+        btnPrev.disabled = true;
+        btnNext.disabled = true;
+        
         // Expose helper to clear lines
         this.clearContent = () => {
              this.scrollWrapper.innerHTML = '';
@@ -473,6 +477,9 @@ class SimpleJsonViewer {
                 if (input.value) {
                     input.select();
                     this.performSearch(input.value);
+                } else {
+                    // Start fresh state (buttons disabled)
+                    this.updateSearchUI();
                 }
             } else {
                 // CLOSING
@@ -608,10 +615,24 @@ class SimpleJsonViewer {
 
     updateSearchUI() {
         const count = this.searchPanel.querySelector('.search-count');
-        if (this.searchMatches.length === 0) {
-            count.textContent = 'No results';
-        } else {
+        const prevBtn = this.searchPanel.querySelector('.prev');
+        const nextBtn = this.searchPanel.querySelector('.next');
+        const input = this.searchPanel.querySelector('input');
+
+        const hasMatches = this.searchMatches.length > 0;
+        
+        if (hasMatches) {
             count.textContent = `${this.currentMatchIndex + 1} of ${this.searchMatches.length}`;
+            prevBtn.disabled = false;
+            nextBtn.disabled = false;
+        } else {
+            if (input.value) {
+                count.textContent = 'No results';
+            } else {
+                count.textContent = '';
+            }
+            prevBtn.disabled = true;
+            nextBtn.disabled = true;
         }
     }
     
@@ -638,7 +659,7 @@ class SimpleJsonViewer {
                 if (!isInput) {
                     e.preventDefault();
                 }
-            }
+             }
         });
     }
 }

@@ -19,9 +19,6 @@ scrollable
 
 search panel should be prettier
 
-search bugs:
- search up \ down buttons should be disabled until search term in inserted
-
 tech dept:
  export the class using one method instead of using the 'window'
  publish as npm package

@@ -243,6 +243,14 @@
     background-color: #e8e8e8;
 }
 
+.json-search-btn:disabled {
+    opacity: 0.4;
+    cursor: default;
+}
+.json-search-btn:disabled:hover {
+    background-color: transparent;
+}
+
 .json-search-btn svg {
     display: block;
 }
